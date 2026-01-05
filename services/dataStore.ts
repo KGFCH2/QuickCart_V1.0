@@ -8,8 +8,8 @@ export const dataStore = {
     const db = getDB();
     const user = db.users.find(u => u.email === email && u.password === password);
     if (!user) throw new Error('Invalid credentials');
-    db.currentUser = { ...user };
-    delete db.currentUser.password;
+    const { password: _, ...userWithoutPassword } = user;
+    db.currentUser = userWithoutPassword as User;
     saveDB(db);
     return db.currentUser;
   },
@@ -24,14 +24,16 @@ export const dataStore = {
       name,
       email,
       role: UserRole.CUSTOMER,
-      password
+      password,
+      wishlist: []
     };
 
     db.users.push(newUser);
     db.currentUser = { ...newUser };
     delete db.currentUser.password;
     saveDB(db);
-    return db.currentUser;
+    const { password: _, ...userWithoutPassword } = db.currentUser;
+    return userWithoutPassword as User;
   },
 
   logout: async () => {
@@ -41,6 +43,19 @@ export const dataStore = {
   },
 
   getCurrentUser: (): User | null => getDB().currentUser,
+
+  updateWishlist: (wishlist: string[]) => {
+    const db = getDB();
+    if (db.currentUser) {
+      db.currentUser.wishlist = wishlist;
+      // Also update in users array
+      const userIndex = db.users.findIndex(u => u.id === db.currentUser?.id);
+      if (userIndex !== -1) {
+        db.users[userIndex].wishlist = wishlist;
+      }
+      saveDB(db);
+    }
+  },
 
   // PRODUCTS
   getProducts: async (category?: ProductCategory): Promise<Product[]> => {
