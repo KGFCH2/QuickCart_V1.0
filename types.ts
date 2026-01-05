@@ -31,6 +31,7 @@ export interface User {
   name: string;
   role: UserRole;
   password?: string;
+  wishlist?: string[];
 }
 
 export interface Product {
