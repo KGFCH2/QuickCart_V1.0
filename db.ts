@@ -11,7 +11,7 @@ interface DBState {
 
 const INITIAL_STATE: DBState = {
   users: [
-    { id: '2', name: 'Test Customer', email: 'customer@test.com', role: UserRole.CUSTOMER, password: 'password123' }
+    { id: '2', name: 'Test Customer', email: 'customer@test.com', role: UserRole.CUSTOMER, password: 'password123', wishlist: [] }
   ],
   products: [
     // Men's Wear
