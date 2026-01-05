@@ -1,6 +1,6 @@
 
 import { getDB, saveDB } from '../db';
-import { Product, User, Order, UserRole, OrderStatus, CartItem, ProductCategory, DashboardStats } from '../types';
+import { Product, User, Order, UserRole, OrderStatus, CartItem, ProductCategory } from '../types';
 
 const simulateDelay = () => new Promise(resolve => setTimeout(resolve, 600));
 
@@ -20,7 +20,7 @@ export const api = {
   register: async (name: string, email: string, password: string): Promise<User> => {
     await simulateDelay();
     const db = getDB();
-    
+
     const existing = db.users.find(u => u.email === email);
     if (existing) throw new Error('Email already registered');
 
@@ -95,11 +95,9 @@ export const api = {
   getOrders: async (): Promise<Order[]> => {
     await simulateDelay();
     const db = getDB();
-    // Admins see all orders; customers see only their own.
-    if (db.currentUser?.role === UserRole.ADMIN) {
-        return db.orders;
-    }
-    return db.orders.filter(o => o.userId === db.currentUser?.id);
+    // Return only orders belonging to the logged-in user
+    if (!db.currentUser) return [];
+    return db.orders.filter(o => o.userId === db.currentUser.id);
   },
 
   getOrderById: async (id: string): Promise<Order | undefined> => {
@@ -116,44 +114,4 @@ export const api = {
     saveDB(db);
   },
 
-  // ADMIN METHODS
-  getAdminStats: async (): Promise<DashboardStats> => {
-    await simulateDelay();
-    const db = getDB();
-    const totalRevenue = db.orders.reduce((acc, o) => acc + o.total, 0);
-    const totalOrders = db.orders.length;
-    const totalProducts = db.products.length;
-    const totalCustomers = db.users.filter(u => u.role === UserRole.CUSTOMER).length;
-    return {
-      totalRevenue,
-      totalOrders,
-      totalProducts,
-      totalCustomers
-    };
-  },
-
-  adminDeleteProduct: async (id: string): Promise<void> => {
-    await simulateDelay();
-    const db = getDB();
-    db.products = db.products.filter(p => p.id !== id);
-    saveDB(db);
-  },
-
-  adminUpsertProduct: async (product: Partial<Product>): Promise<void> => {
-    await simulateDelay();
-    const db = getDB();
-    if (product.id) {
-      const idx = db.products.findIndex(p => p.id === product.id);
-      if (idx !== -1) {
-        db.products[idx] = { ...db.products[idx], ...product } as Product;
-      }
-    } else {
-      const newProduct: Product = {
-        ...product,
-        id: 'p-' + Math.random().toString(36).substr(2, 9),
-      } as Product;
-      db.products.push(newProduct);
-    }
-    saveDB(db);
-  }
 };
