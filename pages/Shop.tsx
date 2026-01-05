@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Search, ShoppingCart, Loader2, Eye, Heart, Plus, Minus, X, Sparkles } from 'lucide-react';
 import { dataStore } from '../services/dataStore';
 import { Product, ProductCategory } from '../types';
@@ -35,24 +35,24 @@ const QuickViewModal: React.FC<{ product: Product; isOpen: boolean; onClose: () 
   return createPortal(
     <div className="fixed inset-0 z-[1000] flex items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-xl animate-in fade-in duration-300">
       <div className="bg-white w-full h-full sm:h-auto sm:max-w-5xl sm:rounded-[3rem] shadow-2xl overflow-hidden flex flex-col md:flex-row relative animate-in zoom-in-95 duration-500 max-h-[100vh] sm:max-h-[90vh]">
-        
+
         {/* Floating Close Button */}
-        <button 
-          onClick={onClose} 
+        <button
+          onClick={onClose}
           className="absolute top-4 right-4 sm:top-6 sm:right-6 z-[1100] p-2 bg-white/90 backdrop-blur shadow-xl rounded-full text-gray-900 border border-gray-100 active:scale-90 transition-transform hover:bg-red-50 hover:text-red-600"
         >
           <X size={18} />
         </button>
-        
+
         {/* Left: Responsive Image Hub */}
         <div className="h-[40vh] md:h-auto md:w-1/2 bg-gray-50 flex items-center justify-center p-8 md:p-12 md:border-r border-gray-100 flex-shrink-0">
-          <img 
-            src={product.image} 
-            alt={product.name} 
-            className="max-w-full max-h-full object-contain drop-shadow-2xl transform hover:scale-105 transition-transform duration-700" 
+          <img
+            src={product.image}
+            alt={product.name}
+            className="max-w-full max-h-full object-contain drop-shadow-2xl transform hover:scale-105 transition-transform duration-700"
           />
         </div>
-        
+
         {/* Right: Details Boutique */}
         <div className="flex-grow md:w-1/2 p-8 md:p-16 flex flex-col overflow-y-auto custom-scrollbar bg-white">
           <div className="mb-6 sm:mb-10">
@@ -61,16 +61,16 @@ const QuickViewModal: React.FC<{ product: Product; isOpen: boolean; onClose: () 
             </span>
             <h2 className="text-3xl sm:text-4xl font-black text-gray-900 mb-3 tracking-tighter leading-tight">{product.name}</h2>
             <div className="flex items-center gap-4">
-               <span className="text-2xl sm:text-3xl font-black text-red-500">{formatCurrency(product.price)}</span>
-               <span className="text-gray-200">|</span>
-               <span className={`text-[10px] font-black uppercase tracking-widest ${product.stock < 10 ? 'text-red-500' : 'text-gray-400'}`}>
-                 {product.stock} units in boutique
-               </span>
+              <span className="text-2xl sm:text-3xl font-black text-red-500">{formatCurrency(product.price)}</span>
+              <span className="text-gray-200">|</span>
+              <span className={`text-[10px] font-black uppercase tracking-widest ${product.stock < 10 ? 'text-red-500' : 'text-gray-400'}`}>
+                {product.stock} units in boutique
+              </span>
             </div>
           </div>
 
           <p className="text-gray-500 mb-10 leading-relaxed font-medium text-sm sm:text-base">{product.description}</p>
-          
+
           <div className="mt-auto space-y-6">
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
               <div className="flex items-center justify-between bg-gray-50 rounded-2xl p-2 border border-gray-100">
@@ -78,8 +78,8 @@ const QuickViewModal: React.FC<{ product: Product; isOpen: boolean; onClose: () 
                 <span className="font-black text-2xl w-12 text-center">{qty}</span>
                 <button onClick={() => setQty(Math.min(product.stock, qty + 1))} className="p-3 hover:bg-white rounded-xl text-red-500 transition-all" disabled={qty >= product.stock}><Plus size={20} /></button>
               </div>
-              
-              <button 
+
+              <button
                 onClick={handleAdd}
                 disabled={adding || product.stock === 0}
                 className="flex-grow py-5 bg-red-600 hover:bg-red-700 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-3 transition-all shadow-xl shadow-red-100 disabled:opacity-50 active:scale-95"
@@ -120,8 +120,8 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
     <>
       <div className="group bg-white rounded-[2rem] border border-gray-100 overflow-hidden hover:shadow-xl hover:border-red-100 transition-all duration-500 flex flex-col h-full relative">
         <div className="absolute top-4 right-4 z-20 flex flex-col gap-3">
-          <button 
-            onClick={handleToggleWishlist} 
+          <button
+            onClick={handleToggleWishlist}
             disabled={wishlistLoading}
             className={`p-2.5 rounded-xl shadow-lg transition-all transform hover:scale-110 active:scale-90 flex items-center justify-center min-w-[40px] min-h-[40px] ${isWishlisted ? 'bg-red-500 text-white' : 'bg-white/90 backdrop-blur-md text-gray-400 hover:text-red-500'}`}
           >
@@ -131,8 +131,8 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
               <Heart size={16} fill={isWishlisted ? 'currentColor' : 'none'} />
             )}
           </button>
-          <button 
-            onClick={handleAddToCart} 
+          <button
+            onClick={handleAddToCart}
             disabled={adding || product.stock === 0}
             className={`p-2.5 rounded-xl shadow-lg transition-all transform hover:scale-110 active:scale-90 flex items-center justify-center min-w-[40px] min-h-[40px] ${adding ? 'bg-red-500 text-white' : 'bg-white/90 backdrop-blur-md text-gray-400 hover:text-red-500'}`}
           >
@@ -151,16 +151,16 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
           </div>
           <div className="absolute top-4 left-4"><span className="bg-red-600/90 backdrop-blur-md text-[9px] font-black tracking-widest uppercase px-3 py-1.5 rounded-full text-white shadow-lg">{product.category}</span></div>
         </div>
-        
+
         <div className="p-6 flex flex-col flex-grow">
           <h3 className="text-base font-black text-gray-900 mb-1 group-hover:text-red-500 transition-colors truncate tracking-tight uppercase">{product.name}</h3>
           <p className="text-[9px] text-gray-400 font-bold mb-5 uppercase tracking-widest">{product.stock} units available</p>
-          
+
           <div className="mt-auto space-y-4">
             <div className="flex items-center justify-between"><span className="text-xl font-black text-gray-900">{formatCurrency(product.price)}</span></div>
-            <button 
-              onClick={handleAddToCart} 
-              disabled={adding || product.stock === 0} 
+            <button
+              onClick={handleAddToCart}
+              disabled={adding || product.stock === 0}
               className={`w-full py-3.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-lg ${adding ? 'bg-red-500 text-white' : 'bg-red-600 text-white hover:bg-red-700 shadow-red-100'}`}
             >
               {adding ? <Loader2 size={16} className="animate-spin" /> : <ShoppingCart size={16} />}
@@ -176,6 +176,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
 
 const ShopPage: React.FC = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -206,6 +207,14 @@ const ShopPage: React.FC = () => {
   const suggestions = searchTerm.trim() ? products.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase())).slice(0, 6) : [];
   const categories = ['All', ...Object.values(ProductCategory)];
 
+  const handleSearch = () => {
+    const term = searchTerm.toLowerCase().trim();
+    if ((term.includes('track') && term.includes('order')) || term === 'order history' || term === 'my orders') {
+      navigate('/orders');
+      setIsAutocompleteOpen(false);
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <section className="relative h-[300px] flex items-center overflow-hidden bg-slate-900">
@@ -229,8 +238,10 @@ const ShopPage: React.FC = () => {
           </div>
           <div className="relative w-full lg:w-96" ref={autocompleteRef}>
             <div className="relative">
-              <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-300" size={18} />
-              <input type="text" placeholder="Search boutique..." value={searchTerm} onFocus={() => setIsAutocompleteOpen(true)} onChange={e => { setSearchTerm(e.target.value); setIsAutocompleteOpen(true); }} className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 pl-14 pr-6 focus:ring-4 focus:ring-red-50 outline-none transition-all font-bold text-sm" />
+              <button onClick={handleSearch} className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-300 hover:text-red-500 transition-colors">
+                <Search size={18} />
+              </button>
+              <input type="text" placeholder="Search boutique..." value={searchTerm} onFocus={() => setIsAutocompleteOpen(true)} onChange={e => { setSearchTerm(e.target.value); setIsAutocompleteOpen(true); }} onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }} className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 pl-14 pr-6 focus:ring-4 focus:ring-red-50 outline-none transition-all font-bold text-sm" />
             </div>
             {isAutocompleteOpen && suggestions.length > 0 && (
               <div className="absolute top-full left-0 right-0 mt-3 bg-white border border-gray-50 rounded-[2rem] shadow-2xl z-[60] overflow-hidden p-2">
@@ -252,7 +263,7 @@ const ShopPage: React.FC = () => {
             {filteredProducts.map(product => <ProductCard key={product.id} product={product} />)}
           </div>
         ) : (
-          <div className="text-center py-32 bg-gray-50 border-4 border-dashed border-gray-100 rounded-[3rem]"><Search size={60} className="text-gray-200 mx-auto mb-6"/><h2 className="text-2xl font-black text-gray-900 tracking-tighter uppercase">No Acquisitions Matching</h2><button onClick={() => { setSearchTerm(''); setSelectedCategory('All'); }} className="mt-8 text-red-600 font-black text-xs uppercase tracking-widest hover:underline">Reset Inventory Audit</button></div>
+          <div className="text-center py-32 bg-gray-50 border-4 border-dashed border-gray-100 rounded-[3rem]"><Search size={60} className="text-gray-200 mx-auto mb-6" /><h2 className="text-2xl font-black text-gray-900 tracking-tighter uppercase">No Acquisitions Matching</h2><button onClick={() => { setSearchTerm(''); setSelectedCategory('All'); }} className="mt-8 text-red-600 font-black text-xs uppercase tracking-widest hover:underline">Reset Inventory Audit</button></div>
         )}
       </div>
     </div>
