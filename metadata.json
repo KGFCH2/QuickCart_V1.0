@@ -1,6 +1,6 @@
 {
   "name": "QuickCart",
-  "description": "A high-performance e-commerce platform featuring a multi-category boutique, secure authentication, live logistics tracking, and a powerful administrative command center. Version 1.0.",
+  "description": "A high-performance e-commerce platform featuring a multi-category boutique, secure authentication, and live logistics tracking. Version 1.0.",
   "requestFramePermissions": [
     "camera"
   ]
