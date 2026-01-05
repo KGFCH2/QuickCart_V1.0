@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { HashRouter, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
-import { 
-  ShoppingBag, Heart, ShoppingCart, 
+import {
+  ShoppingBag, Heart, ShoppingCart,
   Menu, X, Loader2, MapPin, Phone, Mail, HelpCircle, Shield, RefreshCw, ExternalLink,
   MessageSquare, Clock, LifeBuoy, PackageOpen, RotateCcw, ShieldCheck, Lock, Fingerprint, EyeOff, PhoneCall,
   LayoutDashboard, ChevronRight
 } from 'lucide-react';
 import { dataStore } from './services/dataStore';
-import { UserRole, CartItem } from './types';
+import { CartItem } from './types';
 
 // Pages
 import HomePage from './pages/Home';
@@ -96,7 +96,7 @@ const Navbar: React.FC = () => {
   const isAuthPage = location.pathname === '/auth';
   const cartCount = context?.cart.reduce((acc, i) => acc + i.quantity, 0) || 0;
   const wishlistCount = context?.wishlist.length || 0;
-  const isAdmin = context?.user?.role === UserRole.ADMIN;
+
 
   const handleBrandClick = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -120,8 +120,8 @@ const Navbar: React.FC = () => {
   const NavLink = ({ to, children }: { to: string; children: React.ReactNode }) => {
     const isActive = location.pathname === to;
     return (
-      <Link 
-        to={to} 
+      <Link
+        to={to}
         className={`relative text-[10px] font-black uppercase transition-all py-1 group ${navTextClass(to)}`}
       >
         {children}
@@ -151,12 +151,11 @@ const Navbar: React.FC = () => {
             </div>
             <span className="text-base sm:text-xl font-black tracking-tighter uppercase animated-brand-gradient">QuickCart</span>
           </Link>
-          
+
           <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
             <NavLink to="/">Home</NavLink>
             <NavLink to="/shop">Catalog</NavLink>
             <NavLink to="/orders">Tracking</NavLink>
-            {isAdmin && <NavLink to="/admin">Intelligence</NavLink>}
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4">
@@ -193,19 +192,19 @@ const Navbar: React.FC = () => {
               </div>
               <span className="text-xl font-black tracking-tighter uppercase animated-brand-gradient">QuickCart</span>
             </div>
-            
+
             <nav className="flex flex-col gap-6">
               {[
                 { to: '/', label: 'Home', icon: ChevronRight },
                 { to: '/shop', label: 'Catalog', icon: ChevronRight },
                 { to: '/orders', label: 'Tracking', icon: ChevronRight },
-                ...(isAdmin ? [{ to: '/admin', label: 'Intelligence', icon: LayoutDashboard }] : []),
+
                 { to: '/wishlist', label: 'Wishlist', icon: Heart },
                 { to: '/profile', label: 'My Account', icon: ShieldCheck },
               ].map((item) => (
-                <Link 
-                  key={item.to} 
-                  to={item.to} 
+                <Link
+                  key={item.to}
+                  to={item.to}
                   className={`flex items-center justify-between font-black text-xs uppercase tracking-widest py-2 border-b border-gray-50 hover:text-red-500 transition-colors ${location.pathname === item.to ? 'text-red-600' : 'text-gray-500'}`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
@@ -216,18 +215,18 @@ const Navbar: React.FC = () => {
                 </Link>
               ))}
             </nav>
-            
+
             <div className="mt-auto pt-10">
               {context?.user ? (
-                <button 
+                <button
                   onClick={() => { context.logout(); setIsMobileMenuOpen(false); }}
                   className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl"
                 >
                   Secure Logout
                 </button>
               ) : (
-                <Link 
-                  to="/auth" 
+                <Link
+                  to="/auth"
                   className="w-full py-4 btn-gradient text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl text-center block"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
@@ -261,7 +260,7 @@ const FooterModal: React.FC<{ isOpen: boolean; title: string; content: React.Rea
 const App: React.FC = () => {
   const [user, setUser] = useState<any>(dataStore.getCurrentUser());
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [wishlist, setWishlist] = useState<string[]>([]);
+  const [wishlist, setWishlist] = useState<string[]>(dataStore.getCurrentUser()?.wishlist || []);
   const [hideLayout, setHideLayout] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [modal, setModal] = useState<{ isOpen: boolean; title: string; content: React.ReactNode }>({ isOpen: false, title: '', content: null });
@@ -280,8 +279,22 @@ const App: React.FC = () => {
   };
   const removeFromCart = (productId: string) => setCart(prev => prev.filter(item => item.productId !== productId));
   const clearCart = () => setCart([]);
-  const toggleWishlist = (productId: string) => setWishlist(prev => prev.includes(productId) ? prev.filter(id => id !== productId) : [...prev, productId]);
+  const toggleWishlist = (productId: string) => {
+    setWishlist(prev => {
+      const newWishlist = prev.includes(productId) ? prev.filter(id => id !== productId) : [...prev, productId];
+      dataStore.updateWishlist(newWishlist);
+      return newWishlist;
+    });
+  };
   const logout = async () => { await dataStore.logout(); setUser(null); setCart([]); setWishlist([]); };
+
+  useEffect(() => {
+    if (user) {
+      setWishlist(user.wishlist || []);
+    } else {
+      setWishlist([]);
+    }
+  }, [user]);
 
   return (
     <AppContext.Provider value={{ user, setUser, cart, wishlist, hideLayout, setHideLayout, addToCart, removeFromCart, clearCart, toggleWishlist, logout }}>
@@ -303,7 +316,7 @@ const App: React.FC = () => {
               <Route path="/profile" element={<ProfilePage />} />
             </Routes>
           </main>
-          
+
           {!hideLayout && (
             <footer className="bg-slate-950 text-slate-300 py-16 sm:py-20 border-t border-slate-800">
               <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -320,28 +333,28 @@ const App: React.FC = () => {
 
                 <div className="grid grid-cols-2 gap-8">
                   <div className="space-y-4">
-                    <button 
-                      onClick={() => setModal({ 
-                        isOpen: true, 
-                        title: 'Help Center & Support', 
+                    <button
+                      onClick={() => setModal({
+                        isOpen: true,
+                        title: 'Help Center & Support',
                         content: (
                           <div className="space-y-6">
                             <div className="flex gap-4 items-center animate-in slide-in-from-bottom-2 duration-300">
-                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><MessageSquare size={24}/></div>
+                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><MessageSquare size={24} /></div>
                               <div>
                                 <h4 className="font-black text-gray-900 uppercase text-xs tracking-widest mb-1">24/7 Dedicated Support</h4>
                                 <p className="text-sm">Our boutique concierge is always online to assist with your V1.0 acquisitions.</p>
                               </div>
                             </div>
                             <div className="flex gap-4 items-center animate-in slide-in-from-bottom-2 duration-400">
-                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><Clock size={24}/></div>
+                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><Clock size={24} /></div>
                               <div>
                                 <h4 className="font-black text-gray-900 uppercase text-xs tracking-widest mb-1">Express Ticket System</h4>
                                 <p className="text-sm">Priority resolution for Prime Elite members within 2 hours.</p>
                               </div>
                             </div>
                             <div className="flex gap-4 items-center animate-in slide-in-from-bottom-2 duration-500">
-                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><LifeBuoy size={24}/></div>
+                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><LifeBuoy size={24} /></div>
                               <div>
                                 <h4 className="font-black text-gray-900 uppercase text-xs tracking-widest mb-1">Catalog Navigation</h4>
                                 <p className="text-sm">Need help finding a specific style? Contact our fashion studio core.</p>
@@ -349,36 +362,36 @@ const App: React.FC = () => {
                             </div>
                           </div>
                         )
-                      })} 
+                      })}
                       className="flex items-center gap-3 text-xs font-black uppercase tracking-widest text-slate-400 hover:text-orange-500 transition-all group"
                     >
                       <div className="group-hover:scale-[1.5] group-hover:-translate-y-2 transition-all duration-300 text-slate-600 group-hover:text-red-600">
                         <HelpCircle size={16} />
-                      </div> 
+                      </div>
                       Help Center
                     </button>
-                    <button 
-                      onClick={() => setModal({ 
-                        isOpen: true, 
-                        title: 'Returns Hub & Logistics', 
+                    <button
+                      onClick={() => setModal({
+                        isOpen: true,
+                        title: 'Returns Hub & Logistics',
                         content: (
                           <div className="space-y-6">
                             <div className="flex gap-4 items-center animate-in slide-in-from-bottom-2 duration-300">
-                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><RotateCcw size={24}/></div>
+                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><RotateCcw size={24} /></div>
                               <div>
                                 <h4 className="font-black text-gray-900 uppercase text-xs tracking-widest mb-1">15-Day Acquisition Refund</h4>
                                 <p className="text-sm">Hassle-free returns for all unused items in their original boutique packaging.</p>
                               </div>
                             </div>
                             <div className="flex gap-4 items-center animate-in slide-in-from-bottom-2 duration-400">
-                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><PackageOpen size={24}/></div>
+                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><PackageOpen size={24} /></div>
                               <div>
                                 <h4 className="font-black text-gray-900 uppercase text-xs tracking-widest mb-1">Free Doorstep Pickup</h4>
                                 <p className="text-sm">Our logistics fleet will collect your return from your registered address.</p>
                               </div>
                             </div>
                             <div className="flex gap-4 items-center animate-in slide-in-from-bottom-2 duration-500">
-                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><ShieldCheck size={24}/></div>
+                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><ShieldCheck size={24} /></div>
                               <div>
                                 <h4 className="font-black text-gray-900 uppercase text-xs tracking-widest mb-1">QC Verified Instant Credits</h4>
                                 <p className="text-sm">Refunds are processed instantly once our hub verifies the QC manifest.</p>
@@ -386,38 +399,38 @@ const App: React.FC = () => {
                             </div>
                           </div>
                         )
-                      })} 
+                      })}
                       className="flex items-center gap-3 text-xs font-black uppercase tracking-widest text-slate-400 hover:text-orange-500 transition-all group"
                     >
                       <div className="group-hover:scale-[1.5] group-hover:-translate-y-2 transition-all duration-300 text-slate-600 group-hover:text-red-600">
                         <RefreshCw size={16} />
-                      </div> 
+                      </div>
                       Returns Hub
                     </button>
                   </div>
                   <div className="space-y-4">
-                    <button 
-                      onClick={() => setModal({ 
-                        isOpen: true, 
-                        title: 'Privacy & Security Protocol', 
+                    <button
+                      onClick={() => setModal({
+                        isOpen: true,
+                        title: 'Privacy & Security Protocol',
                         content: (
                           <div className="space-y-6">
                             <div className="flex gap-4 items-center animate-in slide-in-from-bottom-2 duration-300">
-                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><Lock size={24}/></div>
+                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><Lock size={24} /></div>
                               <div>
                                 <h4 className="font-black text-gray-900 uppercase text-xs tracking-widest mb-1">AES-256 Quantum Shield</h4>
                                 <p className="text-sm">Your transaction and personal data are protected by the highest standard of encryption.</p>
                               </div>
                             </div>
                             <div className="flex gap-4 items-center animate-in slide-in-from-bottom-2 duration-400">
-                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><Fingerprint size={24}/></div>
+                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><Fingerprint size={24} /></div>
                               <div>
                                 <h4 className="font-black text-gray-900 uppercase text-xs tracking-widest mb-1">Local Data Sovereignty</h4>
                                 <p className="text-sm">All identity and order history are stored on secure local Indian servers.</p>
                               </div>
                             </div>
                             <div className="flex gap-4 items-center animate-in slide-in-from-bottom-2 duration-500">
-                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><EyeOff size={24}/></div>
+                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><EyeOff size={24} /></div>
                               <div>
                                 <h4 className="font-black text-gray-900 uppercase text-xs tracking-widest mb-1">Zero-Sharing Guarantee</h4>
                                 <p className="text-sm">We never monetize your shopping habits with third-party advertising networks.</p>
@@ -425,36 +438,36 @@ const App: React.FC = () => {
                             </div>
                           </div>
                         )
-                      })} 
+                      })}
                       className="flex items-center gap-3 text-xs font-black uppercase tracking-widest text-slate-400 hover:text-orange-500 transition-all group"
                     >
                       <div className="group-hover:scale-[1.5] group-hover:-translate-y-2 transition-all duration-300 text-slate-600 group-hover:text-red-600">
                         <Shield size={16} />
-                      </div> 
+                      </div>
                       Privacy Policy
                     </button>
-                    <button 
-                      onClick={() => setModal({ 
-                        isOpen: true, 
-                        title: 'Contact Hub & Global HQ', 
+                    <button
+                      onClick={() => setModal({
+                        isOpen: true,
+                        title: 'Contact Hub & Global HQ',
                         content: (
                           <div className="space-y-6">
                             <div className="flex gap-4 items-center animate-in slide-in-from-bottom-2 duration-300">
-                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><MapPin size={24}/></div>
+                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><MapPin size={24} /></div>
                               <div>
                                 <h4 className="font-black text-gray-900 uppercase text-xs tracking-widest mb-1">Operational Headquarters</h4>
                                 <p className="text-sm">22/3, 20/3, Dharmatala Rd, Belur, Bally, Howrah, West Bengal - 711202, India.</p>
                               </div>
                             </div>
                             <div className="flex gap-4 items-center animate-in slide-in-from-bottom-2 duration-400">
-                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><Mail size={24}/></div>
+                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><Mail size={24} /></div>
                               <div>
                                 <h4 className="font-black text-gray-900 uppercase text-xs tracking-widest mb-1">Digital Dispatch</h4>
                                 <p className="text-sm"><a href="mailto:babinbid05@gmail.com" className="hover:text-red-600 underline transition-colors">babinbid05@gmail.com</a></p>
                               </div>
                             </div>
                             <div className="flex gap-4 items-center animate-in slide-in-from-bottom-2 duration-500">
-                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><PhoneCall size={24}/></div>
+                              <div className="p-3 bg-red-50 text-red-600 rounded-xl h-fit transition-transform hover:scale-[1.3] animate-in zoom-in-50"><PhoneCall size={24} /></div>
                               <div>
                                 <h4 className="font-black text-gray-900 uppercase text-xs tracking-widest mb-1">Priority Logistics Line</h4>
                                 <p className="text-sm"><a href="tel:+919123777679" className="hover:text-red-600 underline transition-colors">+91 91237 77679</a></p>
@@ -462,27 +475,27 @@ const App: React.FC = () => {
                             </div>
                           </div>
                         )
-                      })} 
+                      })}
                       className="flex items-center gap-3 text-xs font-black uppercase tracking-widest text-slate-400 hover:text-orange-500 transition-all group"
                     >
                       <div className="group-hover:scale-[1.5] group-hover:-translate-y-2 transition-all duration-300 text-slate-600 group-hover:text-red-600">
                         <Phone size={16} />
-                      </div> 
+                      </div>
                       Contact Hub
                     </button>
                   </div>
                 </div>
               </div>
-              
+
               <div className="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6">
                 <div className="flex items-center gap-6 text-[9px] font-black uppercase tracking-widest">
-                  <a 
-                    href="https://www.google.com/maps/search/?api=1&query=22/3,+20/3,+Dharmatala+Rd,+Howrah,+West+Bengal+711202" 
-                    target="_blank" 
+                  <a
+                    href="https://www.google.com/maps/search/?api=1&query=22/3,+20/3,+Dharmatala+Rd,+Howrah,+West+Bengal+711202"
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-slate-500 hover:text-orange-500 transition-colors group"
                   >
-                    <MapPin size={12} className="text-slate-600 group-hover:text-red-500" /> 
+                    <MapPin size={12} className="text-slate-600 group-hover:text-red-500" />
                     <span>Howrah, WB 711202</span>
                     <ExternalLink size={10} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                   </a>
@@ -491,7 +504,7 @@ const App: React.FC = () => {
               </div>
             </footer>
           )}
-          
+
           <FooterModal isOpen={modal.isOpen} title={modal.title} content={modal.content} onClose={() => setModal({ ...modal, isOpen: false })} />
         </div>
       </HashRouter>
