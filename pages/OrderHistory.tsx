@@ -164,18 +164,12 @@ const OrderHistoryPage: React.FC = () => {
         {!context?.user && !loading ? (
           <div className="bg-white/90 backdrop-blur-xl p-10 sm:p-16 rounded-[3rem] border border-gray-100 shadow-2xl text-center">
             <div className="max-w-md mx-auto space-y-6">
-              <input
-                className="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl py-5 px-8 focus:ring-4 focus:ring-red-50 outline-none text-center font-black text-lg placeholder-gray-300"
-                placeholder="ORD-XXXXXX"
-                value={trackId}
-                onChange={e => setTrackId(e.target.value.toUpperCase())}
-              />
-              <button
-                onClick={handleTrack}
-                className="w-full py-5 bg-red-600 text-white rounded-2xl font-black tracking-widest shadow-xl hover:bg-red-700 active:scale-95 transition-all"
-              >
-                RUN LOGISTICS AUDIT
-              </button>
+              <div className="space-y-3">
+                <p className="text-gray-600 font-bold text-base">Sign in to view your orders</p>
+                <Link to="/auth" className="w-full py-5 bg-red-600 text-white rounded-2xl font-black tracking-widest shadow-xl hover:bg-red-700 active:scale-95 transition-all inline-block">
+                  SIGN IN / REGISTER
+                </Link>
+              </div>
             </div>
             <p className="mt-8 text-gray-400 font-bold text-[10px] uppercase tracking-[0.3em]">Sign in for automated fleet sync</p>
           </div>
