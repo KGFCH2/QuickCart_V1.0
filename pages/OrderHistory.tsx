@@ -61,15 +61,15 @@ const ShipmentModal: React.FC<{ order: Order; isOpen: boolean; onClose: () => vo
   return (
     <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 sm:p-6 bg-slate-950 animate-in fade-in duration-300">
       <div className="bg-white w-full max-h-[90vh] sm:max-w-2xl sm:rounded-[3rem] shadow-2xl overflow-hidden flex flex-col relative animate-in zoom-in-95 duration-500">
-        
+
         {/* Header - Fixed Height */}
         <div className="bg-red-600 p-8 sm:p-10 text-white flex-shrink-0 flex justify-between items-center shadow-lg relative z-10">
           <div>
             <h2 className="text-2xl sm:text-3xl font-black tracking-tighter uppercase leading-tight">Live Tracker</h2>
             <p className="text-red-100 text-[10px] font-black tracking-widest opacity-80 uppercase">ID: {order.id}</p>
           </div>
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className="p-3 bg-white/20 hover:bg-white/30 rounded-full transition-all active:scale-90"
           >
             <X size={28} />
@@ -109,13 +109,13 @@ const ShipmentModal: React.FC<{ order: Order; isOpen: boolean; onClose: () => vo
                 <h5 className="text-[10px] font-black uppercase text-gray-400 tracking-widest">Acquisition Destination</h5>
               </div>
               <p className="text-sm font-black text-gray-800 leading-relaxed">
-                {order.shippingAddress.name}<br/>
-                {order.shippingAddress.address}, {order.shippingAddress.city}<br/>
+                {order.shippingAddress.name}<br />
+                {order.shippingAddress.address}, {order.shippingAddress.city}<br />
                 <span className="text-red-600">Pincode: {order.shippingAddress.zip}</span>
               </p>
             </div>
-            <button 
-              onClick={onClose} 
+            <button
+              onClick={onClose}
               className="w-full py-5 bg-slate-950 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl active:scale-95 transition-all mb-4"
             >
               Dismiss Tracker
@@ -131,7 +131,6 @@ const OrderHistoryPage: React.FC = () => {
   const context = useContext(AppContext);
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
-  const [trackId, setTrackId] = useState('');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   useEffect(() => {
@@ -144,17 +143,6 @@ const OrderHistoryPage: React.FC = () => {
     };
     fetch();
   }, [context?.user]);
-
-  const handleTrack = async () => {
-    if (!trackId.trim()) return;
-    const order = await dataStore.getOrderById(trackId.toUpperCase());
-    if (order) {
-      setOrders([order]);
-      setSelectedOrder(order);
-    } else {
-      alert("Tracking ID not found. Ensure format is ORD-XXXXXX.");
-    }
-  };
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
@@ -176,14 +164,14 @@ const OrderHistoryPage: React.FC = () => {
         {!context?.user && !loading ? (
           <div className="bg-white/90 backdrop-blur-xl p-10 sm:p-16 rounded-[3rem] border border-gray-100 shadow-2xl text-center">
             <div className="max-w-md mx-auto space-y-6">
-              <input 
-                className="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl py-5 px-8 focus:ring-4 focus:ring-red-50 outline-none text-center font-black text-lg placeholder-gray-300" 
-                placeholder="ORD-XXXXXX" 
-                value={trackId} 
-                onChange={e => setTrackId(e.target.value.toUpperCase())} 
+              <input
+                className="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl py-5 px-8 focus:ring-4 focus:ring-red-50 outline-none text-center font-black text-lg placeholder-gray-300"
+                placeholder="ORD-XXXXXX"
+                value={trackId}
+                onChange={e => setTrackId(e.target.value.toUpperCase())}
               />
-              <button 
-                onClick={handleTrack} 
+              <button
+                onClick={handleTrack}
                 className="w-full py-5 bg-red-600 text-white rounded-2xl font-black tracking-widest shadow-xl hover:bg-red-700 active:scale-95 transition-all"
               >
                 RUN LOGISTICS AUDIT
@@ -193,19 +181,6 @@ const OrderHistoryPage: React.FC = () => {
           </div>
         ) : (
           <div className="space-y-12">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-6 bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-xl">
-              <h2 className="text-2xl font-black uppercase tracking-tighter">Manifest History</h2>
-              <div className="relative w-full md:w-80">
-                <input 
-                  className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3.5 px-6 focus:ring-2 focus:ring-red-100 outline-none font-bold text-sm" 
-                  placeholder="Filter Tracking ID..." 
-                  value={trackId} 
-                  onChange={e => setTrackId(e.target.value)} 
-                />
-                <Search className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300" size={18} />
-              </div>
-            </div>
-
             {loading ? (
               <div className="flex flex-col items-center justify-center py-20 gap-4">
                 <Loader2 className="animate-spin text-red-600" size={40} />
@@ -236,8 +211,8 @@ const OrderHistoryPage: React.FC = () => {
                         <div className="pt-6 border-t flex justify-between items-center"><span className="font-black text-gray-400 text-xs uppercase">Total Value</span><span className="text-2xl font-black text-red-600">{formatCurrency(order.total)}</span></div>
                       </div>
                       <div className="bg-red-50/30 rounded-[2rem] p-8 border border-red-100/50 flex flex-col justify-between">
-                        <div><div className="flex items-center gap-2 mb-4"><div className="p-1.5 bg-red-600 text-white rounded-lg"><MapPin size={14} /></div><h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Fulfillment Point</h4></div><p className="text-sm font-black text-gray-900 mb-1">{order.shippingAddress.name}</p><p className="text-[11px] text-gray-500 font-bold opacity-80">{order.shippingAddress.address}, {order.shippingAddress.city}<br/>India - {order.shippingAddress.zip}</p></div>
-                        <button onClick={() => setSelectedOrder(order)} className="mt-8 w-full py-4 bg-white border-2 border-red-200 text-red-600 rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-red-600 hover:text-white transition-all shadow-sm">View Shipment Details <ArrowRight size={14}/></button>
+                        <div><div className="flex items-center gap-2 mb-4"><div className="p-1.5 bg-red-600 text-white rounded-lg"><MapPin size={14} /></div><h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Fulfillment Point</h4></div><p className="text-sm font-black text-gray-900 mb-1">{order.shippingAddress.name}</p><p className="text-[11px] text-gray-500 font-bold opacity-80">{order.shippingAddress.address}, {order.shippingAddress.city}<br />India - {order.shippingAddress.zip}</p></div>
+                        <button onClick={() => setSelectedOrder(order)} className="mt-8 w-full py-4 bg-white border-2 border-red-200 text-red-600 rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-red-600 hover:text-white transition-all shadow-sm">View Shipment Details <ArrowRight size={14} /></button>
                       </div>
                     </div>
                   </div>
@@ -245,7 +220,7 @@ const OrderHistoryPage: React.FC = () => {
               </div>
             ) : (
               <div className="text-center py-32 bg-gray-50 border-4 border-dashed border-gray-100 rounded-[3rem]">
-                <Package size={60} className="text-gray-200 mx-auto mb-6"/>
+                <Package size={60} className="text-gray-200 mx-auto mb-6" />
                 <h2 className="text-2xl font-black text-gray-900 tracking-tighter mb-2 uppercase">No Manifests Found</h2>
                 <p className="text-gray-400 font-bold text-sm mb-8">Ready to begin your acquisition journey?</p>
                 <Link to="/shop" className="inline-block px-10 py-4 bg-red-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl hover:bg-red-700 transition-all">ENTER CATALOG</Link>
