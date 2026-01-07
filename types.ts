@@ -1,5 +1,4 @@
 
-// Fixed: Added ADMIN role to UserRole enum to support administrative access
 export enum UserRole {
   CUSTOMER = 'CUSTOMER',
   ADMIN = 'ADMIN'
@@ -65,7 +64,6 @@ export interface Order {
   };
 }
 
-// Fixed: Defined DashboardStats interface to resolve missing export error in api.ts and Admin.tsx
 export interface DashboardStats {
   totalRevenue: number;
   totalOrders: number;
