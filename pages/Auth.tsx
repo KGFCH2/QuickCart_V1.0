@@ -93,7 +93,7 @@ const AuthPage: React.FC = () => {
                     type="text"
                     required
                     className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-xl focus:ring-4 focus:ring-red-100 focus:border-red-600 outline-none transition-all font-bold text-sm"
-                    placeholder="Arjun Sharma"
+                    placeholder="Babin Bid"
                     value={name}
                     onChange={e => setName(e.target.value)}
                   />

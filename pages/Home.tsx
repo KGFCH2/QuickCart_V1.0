@@ -48,15 +48,15 @@ const WatchRedirections: React.FC = () => {
       />
 
       {/* Subtle Decorative Glows - small on mobile, larger on desktop */}
-      <div className="hidden sm:block absolute top-0 left-0 w-96 h-96 bg-blue-500/5 blur-[120px] rounded-full pointer-events-none -z-10"></div>
-      <div className="hidden sm:block absolute bottom-0 right-0 w-96 h-96 bg-rose-500/5 blur-[120px] rounded-full pointer-events-none -z-10"></div>
+      <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500/5 blur-[120px] rounded-full pointer-events-none -z-10"></div>
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-rose-500/5 blur-[120px] rounded-full pointer-events-none -z-10"></div>
 
       <div className="w-full flex flex-col lg:flex-row gap-3 sm:gap-4 md:gap-6 lg:gap-8 relative z-10 mx-auto max-w-7xl px-0 sm:px-2">
         {/* Men's Luxury Watch Redirect */}
         <a
           href={`/shop?category=${ProductCategory.MENS_WATCHES}`}
           onClick={(e) => handleRedirect(e, `/shop?category=${ProductCategory.MENS_WATCHES}`, 'rgba(59,130,246,0.92)')}
-          className="relative w-full flex-1 group overflow-hidden rounded-xl sm:rounded-2xl h-56 sm:h-72 md:h-80 lg:h-96 bg-slate-900 transition-all duration-500 hover:shadow-[0_20px_60px_rgba(30,64,175,0.25)] hover:-translate-y-2 border border-slate-800"
+          className="relative w-full flex-none lg:flex-1 group overflow-hidden rounded-xl sm:rounded-2xl h-56 sm:h-72 md:h-80 lg:h-96 bg-slate-900 transition-all duration-500 hover:shadow-[0_20px_60px_rgba(30,64,175,0.25)] hover:-translate-y-2 border border-slate-800"
         >
           <img
             src="https://images-cdn.ubuy.co.in/65ebd13aa496cc761a5ae72b-poedagar-men-watch-top-brand-luxury.jpg"
@@ -67,11 +67,11 @@ const WatchRedirections: React.FC = () => {
           <div className="absolute inset-0 p-3 sm:p-5 md:p-8 flex flex-col justify-end items-start text-left z-20">
             <span className="text-blue-300 font-bold text-[7px] sm:text-[8px] uppercase tracking-widest mb-1 sm:mb-2">HOROLOGY</span>
             <h3 className="text-white text-lg sm:text-2xl md:text-4xl lg:text-5xl font-black uppercase tracking-tight mb-2 sm:mb-3 leading-none">Men's<br /><span className="text-blue-400">Watches</span></h3>
-            <p className="text-gray-300 font-medium text-[10px] sm:text-xs md:text-sm max-w-full mb-3 sm:mb-4 leading-snug hidden sm:block">
+            <p className="text-gray-300 font-medium text-[10px] sm:text-xs md:text-sm max-w-full mb-3 sm:mb-4 leading-snug block">
               Precision crafted.
             </p>
             <button className="bg-blue-600 hover:bg-blue-500 text-white px-3 sm:px-5 py-2 rounded-lg font-bold text-[10px] sm:text-xs uppercase tracking-widest flex items-center gap-1 sm:gap-2 w-full sm:w-auto justify-center transition-all duration-300 shadow-lg">
-              EXPLORE <ArrowRight size={12} className="hidden sm:inline" />
+              EXPLORE <ArrowRight size={12} className="inline" />
             </button>
           </div>
         </a>
@@ -80,7 +80,7 @@ const WatchRedirections: React.FC = () => {
         <a
           href={`/shop?category=${ProductCategory.WOMENS_WATCHES}`}
           onClick={(e) => handleRedirect(e, `/shop?category=${ProductCategory.WOMENS_WATCHES}`, 'rgba(225,29,72,0.92)')}
-          className="relative w-full flex-1 group overflow-hidden rounded-xl sm:rounded-2xl h-56 sm:h-72 md:h-80 lg:h-96 bg-white transition-all duration-500 hover:shadow-[0_20px_60px_rgba(225,29,72,0.15)] hover:-translate-y-2 border border-gray-100"
+          className="relative w-full flex-none lg:flex-1 group overflow-hidden rounded-xl sm:rounded-2xl h-56 sm:h-72 md:h-80 lg:h-96 bg-white transition-all duration-500 hover:shadow-[0_20px_60px_rgba(225,29,72,0.15)] hover:-translate-y-2 border border-gray-100"
         >
           <img
             src="https://img4.dhresource.com/webp/m/0x0/f3/albu/km/n/27/aca5a1bc-2f87-417c-b632-54c249cd7a7f.jpg"
@@ -91,11 +91,11 @@ const WatchRedirections: React.FC = () => {
           <div className="absolute inset-0 p-3 sm:p-5 md:p-8 flex flex-col justify-end md:items-end items-start md:text-right text-left z-20">
             <span className="text-rose-400 font-bold text-[7px] sm:text-[8px] uppercase tracking-widest mb-1 sm:mb-2">ELEGANCE</span>
             <h3 className="text-white text-lg sm:text-2xl md:text-4xl lg:text-5xl font-black uppercase tracking-tight mb-2 sm:mb-3 leading-none">Women's<br /><span className="text-rose-400">Watches</span></h3>
-            <p className="text-gray-300 font-medium text-[10px] sm:text-xs md:text-sm max-w-full mb-3 sm:mb-4 leading-snug hidden sm:block">
+            <p className="text-gray-300 font-medium text-[10px] sm:text-xs md:text-sm max-w-full mb-3 sm:mb-4 leading-snug block">
               Minimalist design.
             </p>
             <button className="bg-rose-600 hover:bg-rose-500 text-white px-3 sm:px-5 py-2 rounded-lg font-bold text-[10px] sm:text-xs uppercase tracking-widest flex items-center gap-1 sm:gap-2 w-full sm:w-auto justify-center transition-all duration-300 shadow-lg">
-              EXPLORE <ArrowRight size={12} className="hidden sm:inline" />
+              EXPLORE <ArrowRight size={12} className="inline" />
             </button>
           </div>
         </a>
