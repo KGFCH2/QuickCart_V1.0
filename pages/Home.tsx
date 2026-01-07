@@ -39,7 +39,7 @@ const WatchRedirections: React.FC = () => {
   };
 
   return (
-    <section className="bg-[#f1f5f9] py-16 sm:py-24 px-6 overflow-hidden relative border-t border-gray-100">
+    <section className="w-full bg-[#f1f5f9] py-12 sm:py-16 md:py-20 lg:py-24 px-3 sm:px-4 md:px-6 relative border-t border-gray-100">
       {/* Full-screen color overlay for redirect effect */}
       <div
         aria-hidden
@@ -47,60 +47,56 @@ const WatchRedirections: React.FC = () => {
         style={{ backgroundColor: overlay.color }}
       />
 
-      {/* Subtle Decorative Glows */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500/5 blur-[120px] rounded-full pointer-events-none"></div>
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-rose-500/5 blur-[120px] rounded-full pointer-events-none"></div>
+      {/* Subtle Decorative Glows - small on mobile, larger on desktop */}
+      <div className="hidden sm:block absolute top-0 left-0 w-96 h-96 bg-blue-500/5 blur-[120px] rounded-full pointer-events-none -z-10"></div>
+      <div className="hidden sm:block absolute bottom-0 right-0 w-96 h-96 bg-rose-500/5 blur-[120px] rounded-full pointer-events-none -z-10"></div>
 
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 lg:gap-10 relative z-10">
-        {/* Men's Luxury Watch Redirect - Deep Midnight Theme with Azure Glow */}
+      <div className="w-full flex flex-col lg:flex-row gap-3 sm:gap-4 md:gap-6 lg:gap-8 relative z-10 mx-auto max-w-7xl px-0 sm:px-2">
+        {/* Men's Luxury Watch Redirect */}
         <a
           href={`/shop?category=${ProductCategory.MENS_WATCHES}`}
           onClick={(e) => handleRedirect(e, `/shop?category=${ProductCategory.MENS_WATCHES}`, 'rgba(59,130,246,0.92)')}
-          className="relative flex-1 group overflow-hidden rounded-[2.5rem] h-[380px] sm:h-[500px] bg-slate-900 transition-all duration-500 hover:shadow-[0_20px_60px_rgba(30,64,175,0.25)] hover:-translate-y-2 border border-slate-800"
+          className="relative w-full flex-1 group overflow-hidden rounded-xl sm:rounded-2xl h-56 sm:h-72 md:h-80 lg:h-96 bg-slate-900 transition-all duration-500 hover:shadow-[0_20px_60px_rgba(30,64,175,0.25)] hover:-translate-y-2 border border-slate-800"
         >
-          <div className="absolute inset-0 opacity-50 group-hover:opacity-100 transition-opacity duration-1000">
-            <img
-              src="https://images-cdn.ubuy.co.in/65ebd13aa496cc761a5ae72b-poedagar-men-watch-top-brand-luxury.jpg"
-              className="w-full h-full object-cover transition-transform duration-[2500ms] group-hover:scale-110"
-              alt="Men's Watches"
-            />
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
-          <div className="absolute inset-0 p-8 sm:p-12 flex flex-col justify-end items-start text-left">
-            <span className="text-blue-400 font-black text-[9px] uppercase tracking-[0.4em] mb-3 transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">HOROLOGY CORE</span>
-            <h3 className="text-white text-3xl sm:text-5xl font-black uppercase tracking-tighter mb-4 leading-none">Men's<br /><span className="text-blue-500 group-hover:text-blue-400 transition-colors">Boutique</span></h3>
-            <p className="text-gray-400 font-medium text-xs sm:text-sm max-w-[240px] mb-6 transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-75">
-              Precision engineering for the modern executive. Discover our automatic collection.
+          <img
+            src="https://images-cdn.ubuy.co.in/65ebd13aa496cc761a5ae72b-poedagar-men-watch-top-brand-luxury.jpg"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2500ms] group-hover:scale-110 opacity-80"
+            alt="Men's Watches"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/50 to-transparent"></div>
+          <div className="absolute inset-0 p-3 sm:p-5 md:p-8 flex flex-col justify-end items-start text-left z-20">
+            <span className="text-blue-300 font-bold text-[7px] sm:text-[8px] uppercase tracking-widest mb-1 sm:mb-2">HOROLOGY</span>
+            <h3 className="text-white text-lg sm:text-2xl md:text-4xl lg:text-5xl font-black uppercase tracking-tight mb-2 sm:mb-3 leading-none">Men's<br /><span className="text-blue-400">Watches</span></h3>
+            <p className="text-gray-300 font-medium text-[10px] sm:text-xs md:text-sm max-w-full mb-3 sm:mb-4 leading-snug hidden sm:block">
+              Precision crafted.
             </p>
-            <div className="bg-white text-black px-6 py-3 rounded-xl font-black text-[9px] uppercase tracking-widest flex items-center gap-2 transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-150 shadow-xl group-hover:shadow-blue-500/20">
-              DISCOVER <ArrowRight size={14} />
-            </div>
+            <button className="bg-blue-600 hover:bg-blue-500 text-white px-3 sm:px-5 py-2 rounded-lg font-bold text-[10px] sm:text-xs uppercase tracking-widest flex items-center gap-1 sm:gap-2 w-full sm:w-auto justify-center transition-all duration-300 shadow-lg">
+              EXPLORE <ArrowRight size={12} className="hidden sm:inline" />
+            </button>
           </div>
         </a>
 
-        {/* Women's Luxury Watch Redirect - Champagne Cream Theme with Rose Red Glow */}
+        {/* Women's Luxury Watch Redirect */}
         <a
           href={`/shop?category=${ProductCategory.WOMENS_WATCHES}`}
           onClick={(e) => handleRedirect(e, `/shop?category=${ProductCategory.WOMENS_WATCHES}`, 'rgba(225,29,72,0.92)')}
-          className="relative flex-1 group overflow-hidden rounded-[2.5rem] h-[380px] sm:h-[500px] bg-white transition-all duration-500 hover:shadow-[0_20px_60px_rgba(225,29,72,0.15)] hover:-translate-y-2 border border-gray-100"
+          className="relative w-full flex-1 group overflow-hidden rounded-xl sm:rounded-2xl h-56 sm:h-72 md:h-80 lg:h-96 bg-white transition-all duration-500 hover:shadow-[0_20px_60px_rgba(225,29,72,0.15)] hover:-translate-y-2 border border-gray-100"
         >
-          <div className="absolute inset-0 opacity-70 group-hover:opacity-100 transition-opacity duration-1000">
-            <img
-              src="https://img4.dhresource.com/webp/m/0x0/f3/albu/km/n/27/aca5a1bc-2f87-417c-b632-54c249cd7a7f.jpg"
-              className="w-full h-full object-cover transition-transform duration-[2500ms] group-hover:scale-110"
-              alt="Women's Watches"
-            />
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/20 to-transparent"></div>
-          <div className="absolute inset-0 p-8 sm:p-12 flex flex-col justify-end items-end text-right">
-            <span className="text-rose-600 font-black text-[9px] uppercase tracking-[0.4em] mb-3 transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">GRACE ATELIER</span>
-            <h3 className="text-gray-900 text-3xl sm:text-5xl font-black uppercase tracking-tighter mb-4 leading-none">Women's<br /><span className="text-rose-600 group-hover:text-rose-500 transition-colors">Studio</span></h3>
-            <p className="text-gray-600 font-medium text-xs sm:text-sm max-w-[240px] mb-6 transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-75">
-              Minimalist elegance with a sapphire finish. Timeless pieces for every silhouette.
+          <img
+            src="https://img4.dhresource.com/webp/m/0x0/f3/albu/km/n/27/aca5a1bc-2f87-417c-b632-54c249cd7a7f.jpg"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2500ms] group-hover:scale-110 opacity-85"
+            alt="Women's Watches"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-900/50 to-transparent"></div>
+          <div className="absolute inset-0 p-3 sm:p-5 md:p-8 flex flex-col justify-end md:items-end items-start md:text-right text-left z-20">
+            <span className="text-rose-400 font-bold text-[7px] sm:text-[8px] uppercase tracking-widest mb-1 sm:mb-2">ELEGANCE</span>
+            <h3 className="text-white text-lg sm:text-2xl md:text-4xl lg:text-5xl font-black uppercase tracking-tight mb-2 sm:mb-3 leading-none">Women's<br /><span className="text-rose-400">Watches</span></h3>
+            <p className="text-gray-300 font-medium text-[10px] sm:text-xs md:text-sm max-w-full mb-3 sm:mb-4 leading-snug hidden sm:block">
+              Minimalist design.
             </p>
-            <div className="bg-gray-900 text-white px-6 py-3 rounded-xl font-black text-[9px] uppercase tracking-widest flex items-center gap-2 transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-150 shadow-xl group-hover:shadow-rose-500/20">
-              EXPLORE <ArrowRight size={14} />
-            </div>
+            <button className="bg-rose-600 hover:bg-rose-500 text-white px-3 sm:px-5 py-2 rounded-lg font-bold text-[10px] sm:text-xs uppercase tracking-widest flex items-center gap-1 sm:gap-2 w-full sm:w-auto justify-center transition-all duration-300 shadow-lg">
+              EXPLORE <ArrowRight size={12} className="hidden sm:inline" />
+            </button>
           </div>
         </a>
       </div>
@@ -131,9 +127,16 @@ const HomePage: React.FC = () => {
 
   const heroImages = [
     "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=1920",
-    "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&q=80&w=1920",
+    "https://img.freepik.com/free-photo/realistic-scene-from-neighborhood-yard-sale-miscellaneous-items_23-2151238490.jpg?semt=ais_hybrid&w=740&q=80",
     "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80&w=1920",
-    "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&q=80&w=1920"
+    "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&q=80&w=1920",
+    "https://img.freepik.com/free-photo/woman-with-shopping-bags_329181-8871.jpg?semt=ais_hybrid&w=740&q=80",
+    "https://img.freepik.com/free-photo/young-man-choosing-cloths-menswear-shop_1303-30951.jpg?semt=ais_hybrid&w=740&q=80",
+    "https://www.opendatabay.com/_next/image?url=https://storage.googleapis.com/opendatabay_public/8594dec6-9252-4519-9011-3933c6fd77f7/808c5da8-1738692447252.jpg&w=640&q=75",
+    "https://img.freepik.com/free-photo/eco-bag-with-different-fruits-vegetables_169016-5438.jpg?semt=ais_hybrid&w=740&q=80",
+    "https://img.freepik.com/premium-photo/display-phones-store-with-glass-wall-that-says-phone_862462-29657.jpg?w=360",
+    "https://assets.entrepreneur.com/content/3x2/2000/1719984450-FashionIndustry.jpg?format=pjeg&auto=webp&crop=4:3",
+    "https://img.freepik.com/free-photo/fast-fashion-concept-with-full-clothing-store_23-2150871356.jpg?semt=ais_hybrid&w=740&q=80"
   ];
 
   useEffect(() => {
@@ -291,8 +294,8 @@ const HomePage: React.FC = () => {
                   <button
                     onClick={() => setActiveQuestion(activeQuestion === idx ? null : idx)}
                     className={`w-full text-left px-6 py-5 rounded-2xl border transition-all flex items-center justify-between font-bold text-sm ${activeQuestion === idx
-                        ? 'bg-red-600 border-red-500 text-white shadow-xl shadow-red-500/20'
-                        : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10 hover:border-white/20'
+                      ? 'bg-red-600 border-red-500 text-white shadow-xl shadow-red-500/20'
+                      : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10 hover:border-white/20'
                       }`}
                   >
                     <span className="flex items-center gap-3">
