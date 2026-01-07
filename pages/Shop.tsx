@@ -182,6 +182,7 @@ const ShopPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isAutocompleteOpen, setIsAutocompleteOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>(searchParams.get('category') || 'All');
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const autocompleteRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -232,7 +233,7 @@ const ShopPage: React.FC = () => {
           <div className="flex-grow w-full overflow-hidden">
             <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
               {categories.map(cat => (
-                <button key={cat} onClick={() => setSelectedCategory(cat)} className={`px-6 py-3 rounded-2xl text-[10px] font-black transition-all border whitespace-nowrap uppercase tracking-widest ${selectedCategory === cat ? 'bg-red-600 text-white border-red-600 shadow-lg' : 'bg-white text-gray-400 border-gray-100 hover:text-red-500'}`}>{cat}</button>
+                <button key={cat} onClick={() => { if (cat !== selectedCategory) { setIsTransitioning(true); setTimeout(() => { setSelectedCategory(cat); setIsTransitioning(false); }, 300); } }} className={`px-6 py-3 rounded-2xl text-[10px] font-black transition-all border whitespace-nowrap uppercase tracking-widest ${selectedCategory === cat ? 'bg-red-600 text-white border-red-600 shadow-lg' : 'bg-white text-gray-400 border-gray-100 hover:text-red-500'}`}>{cat}</button>
               ))}
             </div>
           </div>
@@ -259,8 +260,16 @@ const ShopPage: React.FC = () => {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-40 gap-4"><Loader2 className="animate-spin text-red-600" size={40} /><p className="text-gray-400 font-black uppercase tracking-widest text-[10px]">Syncing Boutique...</p></div>
         ) : filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {filteredProducts.map(product => <ProductCard key={product.id} product={product} />)}
+          <div key={selectedCategory} className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 animate-in fade-in duration-500 ${isTransitioning ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
+            {filteredProducts.map((product, idx) => (
+              <div
+                key={product.id}
+                className="h-full animate-in fade-in zoom-in-90 slide-in-from-bottom-6 duration-800 ease-out"
+                style={{ animationDelay: `${idx * 75}ms`, animationFillMode: 'both' }}
+              >
+                <ProductCard product={product} />
+              </div>
+            ))}
           </div>
         ) : (
           <div className="text-center py-32 bg-gray-50 border-4 border-dashed border-gray-100 rounded-[3rem]"><Search size={60} className="text-gray-200 mx-auto mb-6" /><h2 className="text-2xl font-black text-gray-900 tracking-tighter uppercase">No Acquisitions Matching</h2><button onClick={() => { setSearchTerm(''); setSelectedCategory('All'); }} className="mt-8 text-red-600 font-black text-xs uppercase tracking-widest hover:underline">Reset Inventory Audit</button></div>
