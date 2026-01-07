@@ -218,7 +218,7 @@ const ShopPage: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <section className="relative h-[300px] flex items-center overflow-hidden bg-slate-900">
-        <div className="absolute inset-0 opacity-50 bg-[url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=1920')] bg-cover bg-center"></div>
+        <div className="absolute inset-0 opacity-50 bg-[url('https://upcycleluxe.com/cdn/shop/articles/correction-2.jpg?v=1709860540&width=1024')] bg-cover bg-center"></div>
         <div className="relative z-10 max-w-7xl mx-auto px-6 w-full pt-10">
           <div className="max-w-2xl">
             <div className="flex items-center gap-2 mb-4"><div className="p-2 bg-red-600 text-white rounded-lg"><Sparkles size={16} /></div><span className="text-[10px] font-black uppercase tracking-widest text-red-300">Catalog Registry V1.0</span></div>
